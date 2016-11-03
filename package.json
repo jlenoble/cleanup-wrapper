@@ -1,0 +1,45 @@
+{
+  "name": "cleanup-wrapper",
+  "version": "0.0.0",
+  "description": "Provide functions that leave a mess behind and break unit testing with some autocleaning capabilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jlenoble/cleanup-wrapper.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Jason Lenoble",
+    "email": "jason.lenoble@gmail.com"
+  },
+  "contributors": [],
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.3.0"
+  },
+  "bugs": {
+    "url": "https://github.com/jlenoble/cleanup-wrapper/issues"
+  },
+  "homepage": "https://github.com/jlenoble/cleanup-wrapper#readme",
+  "devDependencies": {
+    "autoreload-gulp": "^0.1.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.9.0",
+    "chai": "^3.5.0",
+    "del": "^2.2.2",
+    "gulp": "git://github.com/gulpjs/gulp.git#4.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-cached": "^1.1.0",
+    "gulp-jscs": "^4.0.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "plumb-gulp": "^0.1.0",
+    "stat-again": "^0.2.0"
+  },
+  "dependencies": {}
+}
