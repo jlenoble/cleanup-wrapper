@@ -16,13 +16,13 @@ describe('Testing tmpDir wrapper', function() {
     this.clean = tmpDir('tmp_utils', this.dirty);
   });
 
-  it(`tmpDir cleans up tmp_utils dir`, function() {
+  it(`tmpDir wrapper cleans up dir`, function() {
     return this.clean().then(() => {
       return expectEventuallyDeleted('tmp_utils', 50, 10);
     });
   });
 
-  it(`If tmp_utils dir already exists, tmpDir throws an error`,
+  it(`If dir already exists, tmpDir wrapper throws an error`,
     tmpDir('tmp_utils', function() {
     return this.dirty().then(this.clean)
       .catch(err => {
