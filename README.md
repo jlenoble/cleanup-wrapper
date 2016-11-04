@@ -46,12 +46,12 @@ clean('World'); // Returns 'overridden: World'
 
 ### Default options
 
-```before```: A function to be run prior to calling the wrapped function.
-```after```: A function that cleans up after calling the wrapped function, whether it threw an exception or not.
+* ```before```: A function to be run prior to calling the wrapped function.
+* ```after```: A function that cleans up after calling the wrapped function, whether it threw an exception or not.
 
 ### Custom options
 
-You can pass any custom option you like. They can be accessed within the optional functions ```before``` and ```after``` using the ```this````keyword.
+You can pass any custom option you like. They can be accessed within the optional functions ```before``` and ```after``` using the ```this``` keyword.
 
 ```js
 import cleanupWrapper from 'cleanup-wrapper';
@@ -79,7 +79,7 @@ hello === 'Hello'; // true
 
 ## Convenience wrappers
 
-### tmpDir
+### tmpDir(pathName, func)
 
 tmpDir ensures that a directory is actually temporary. Before executing any function, it will check for the existence of the directory and throw an error if it finds it. Upon completion of the function or upon encountering an exception while running it, it will remove the tmp dir automatically.
 
@@ -97,7 +97,7 @@ const clean = tmpDir(dirName, dirty);
 clean(); // Executes dirty(), creating dirName, then removing it on completion or on exception
 ```
 
-### overrideMethod
+### overrideMethod(object, methodName, newMethod, func)
 
 overrideMethod allows to encapsulate a temporary method override. It will first override a specified method with some function passed as argument. Then it will run the code where the method should be overridden, and finally it will restore the method automatically.
 
