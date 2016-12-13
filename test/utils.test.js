@@ -22,6 +22,12 @@ describe('Testing tmpDir wrapper', function() {
     });
   });
 
+  it(`tmpDir wrapper cleans up [...dirs]`, function() {
+    return tmpDir(['tmp_utils'], this.dirty)().then(() => {
+      return expectEventuallyDeleted('tmp_utils', 50, 10);
+    });
+  });
+
   it(`If dir already exists, tmpDir wrapper throws an error`,
     tmpDir('tmp_utils', function() {
     return this.dirty().then(this.clean)

@@ -40,21 +40,23 @@ export default function cleanupWrapper(func, options) {
 };
 
 export function tmpDir(dir, func) {
+  const dirs = Array.isArray(dir) ? dir : [dir];
   return cleanupWrapper(func, {
-    dir,
+    dirs,
     before() {
-      return expectEventuallyDeleted(this.dir)
+      return Promise.all(this.dirs.map(dir => expectEventuallyDeleted(dir)
         .catch(err => {
           if (err.message.match(
             /File '.*' could not be deleted within the imparted time frame/)) {
-            throw new Error(`Dir '${this.dir}' already exists`);
+            throw new Error(
+              `Dir '${dir}' already exists`);
           } else {
             throw err;
           }
-        });
+        })));
     },
     after() {
-      return del(this.dir);
+      return del(this.dirs);
     }
   });
 };
