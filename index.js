@@ -75,21 +75,22 @@ function cleanupWrapper(func, options) {
 };
 
 function tmpDir(dir, func) {
+  var dirs = Array.isArray(dir) ? dir : [dir];
   return cleanupWrapper(func, {
-    dir: dir,
+    dirs: dirs,
     before: function before() {
-      var _this2 = this;
-
-      return (0, _statAgain.expectEventuallyDeleted)(this.dir).catch(function (err) {
-        if (err.message.match(/File '.*' could not be deleted within the imparted time frame/)) {
-          throw new Error('Dir \'' + _this2.dir + '\' already exists');
-        } else {
-          throw err;
-        }
-      });
+      return Promise.all(this.dirs.map(function (dir) {
+        return (0, _statAgain.expectEventuallyDeleted)(dir).catch(function (err) {
+          if (err.message.match(/File '.*' could not be deleted within the imparted time frame/)) {
+            throw new Error('Dir \'' + dir + '\' already exists');
+          } else {
+            throw err;
+          }
+        });
+      }));
     },
     after: function after() {
-      return (0, _del2.default)(this.dir);
+      return (0, _del2.default)(this.dirs);
     }
   });
 };
