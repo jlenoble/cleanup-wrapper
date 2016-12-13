@@ -83,6 +83,8 @@ hello === 'Hello'; // true
 
 tmpDir ensures that a directory is actually temporary. Before executing any function, it will check for the existence of the directory and throw an error if it finds it. Upon completion of the function or upon encountering an exception while running it, it will remove the tmp dir automatically.
 
+As a convenience, ```pathname``` can actually be an array of pathnames.
+
 ```js
 import {tmpDir} from 'cleanup-wrapper';
 
