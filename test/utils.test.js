@@ -6,9 +6,9 @@ import {expectEventuallyDeleted} from 'stat-again';
 describe('Testing tmpDir wrapper', function() {
 
   before(function() {
-    this.dirty = function() {
+    this.dirty = function(dir = 'tmp_utils') {
       return new Promise((resolve, reject) => {
-        gulp.src('.babelrc').pipe(gulp.dest('tmp_utils'))
+        gulp.src('.babelrc').pipe(gulp.dest(dir))
           .on('end', resolve)
           .on('error', reject);
       });
@@ -23,8 +23,11 @@ describe('Testing tmpDir wrapper', function() {
   });
 
   it(`tmpDir wrapper cleans up [...dirs]`, function() {
-    return tmpDir(['tmp_utils'], this.dirty)().then(() => {
-      return expectEventuallyDeleted('tmp_utils', 50, 10);
+    const dirs = ['tmp_utils1', 'tmp_utils2'];
+    return tmpDir(dirs, () => Promise.all(
+      dirs.map(dir => this.dirty.bind(this, dir))
+    ))().then(() => {
+      return Promise.all(dirs.map(dir => expectEventuallyDeleted(dir, 50, 10)));
     });
   });
 
