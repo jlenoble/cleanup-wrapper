@@ -1,13 +1,13 @@
 import {expectEventuallyDeleted} from 'stat-again';
 import del from 'del';
 
-export default function cleanupWrapper(func, options) {
-  options = Object.assign({
-    before: function() {},
-    after: function() {}
-  }, options);
+export default function cleanupWrapper (func, _options) {
+  const options = Object.assign({
+    before: function () {},
+    after: function () {},
+  }, _options);
 
-  return function(...args) {
+  return function (...args) {
     let bef = options.before();
 
     const exec = () => {
@@ -39,11 +39,11 @@ export default function cleanupWrapper(func, options) {
   };
 };
 
-export function tmpDir(dir, func) {
+export function tmpDir (dir, func) {
   const dirs = Array.isArray(dir) ? dir : [dir];
   return cleanupWrapper(func, {
     dirs,
-    before() {
+    before () {
       return Promise.all(this.dirs.map(dir => expectEventuallyDeleted(dir)
         .catch(err => {
           if (err.message.match(
@@ -55,21 +55,21 @@ export function tmpDir(dir, func) {
           }
         })));
     },
-    after() {
+    after () {
       return del(this.dirs);
-    }
+    },
   });
 };
 
-export function overrideMethod(object, methodName, newMethod, func) {
+export function overrideMethod (object, methodName, newMethod, func) {
   return cleanupWrapper(func, {
     object, methodName, newMethod,
     method: object[methodName],
-    before() {
+    before () {
       this.object[this.methodName] = this.newMethod;
     },
-    after() {
+    after () {
       this.object[this.methodName] = this.method;
-    }
+    },
   });
 };

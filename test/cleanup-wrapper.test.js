@@ -6,10 +6,9 @@ import cached from 'gulp-cached';
 import {expectEventuallyFound, expectEventuallyDeleted}
   from 'stat-again';
 
-describe('Testing cleanupWrapper', function() {
-
-  it(`Making sure a tmp file is deleted`, function() {
-    function dirty() {
+describe('Testing cleanupWrapper', function () {
+  it(`Making sure a tmp file is deleted`, function () {
+    function dirty () {
       return new Promise((resolve, reject) => {
         gulp.src('.babelrc').pipe(gulp.dest('tmp'))
           .on('end', resolve)
@@ -18,9 +17,9 @@ describe('Testing cleanupWrapper', function() {
     }
 
     const clean = cleanupWrapper(dirty, {
-      after() {
+      after () {
         return del('tmp');
-      }
+      },
     });
 
     return dirty().then(() => {
@@ -42,10 +41,10 @@ describe('Testing cleanupWrapper', function() {
     });
   });
 
-  it(`Making sure a cache is deleted`, function() {
+  it(`Making sure a cache is deleted`, function () {
     const cacheName = 'tmp-cache';
 
-    function dirty() {
+    function dirty () {
       return new Promise((resolve, reject) => {
         gulp.src('.babelrc').pipe(cached(cacheName))
           .on('finish', resolve)
@@ -54,9 +53,9 @@ describe('Testing cleanupWrapper', function() {
     }
 
     const clean = cleanupWrapper(dirty, {
-      after() {
+      after () {
         return delete cached.caches[cacheName];
-      }
+      },
     });
 
     return dirty().then(() => {
@@ -67,21 +66,25 @@ describe('Testing cleanupWrapper', function() {
     });
   });
 
-  it(`Making sure an overridden method is restored`, function() {
+  it(`Making sure an overridden method is restored`, function () {
     let obj = {
-      title() {return 'original title';}
+      title () {
+        return 'original title';
+      },
     };
 
-    function dirty() {
-      obj.title = function() {return 'overridden title';}
+    function dirty () {
+      obj.title = function () {
+        return 'overridden title';
+      };
       return obj.title();
     }
 
     const clean = cleanupWrapper(dirty, {
       title: obj.title,
-      after() {
-        obj.title = this.title
-      }
+      after () {
+        obj.title = this.title;
+      },
     });
 
     expect(dirty()).to.equal('overridden title');
@@ -91,23 +94,31 @@ describe('Testing cleanupWrapper', function() {
     expect(obj.title()).to.equal('original title');
   });
 
-  describe('Testing returned types', function() {
-
+  describe('Testing returned types', function () {
     [
-      function() {return 'before';},
-      function() {return Promise.resolve('before');}
+      function () {
+        return 'before';
+      },
+      function () {
+        return Promise.resolve('before');
+      },
     ].forEach((before, b) => {
-
       [
-        function() {return 'func';},
-        function() {return Promise.resolve('func');}
+        function () {
+          return 'func';
+        },
+        function () {
+          return Promise.resolve('func');
+        },
       ].forEach((func, f) => {
-
         [
-          function() {return 'after';},
-          function() {return Promise.resolve('after');}
+          function () {
+            return 'after';
+          },
+          function () {
+            return Promise.resolve('after');
+          },
         ].forEach((after, a) => {
-
           const title = `When:
           'before'  returns a ${b%2 ? 'Promise' : 'String'}
           'func'    returns a ${f%2 ? 'Promise' : 'String'}
@@ -115,8 +126,7 @@ describe('Testing cleanupWrapper', function() {
         Then:
           'wrapper' returns a ${b%2 || f%2 || a%2 ? 'Promise' : 'String'}`;
 
-          it(title, function() {
-
+          it(title, function () {
             const clean = cleanupWrapper(func, {before, after});
 
             let ret = clean();
@@ -129,13 +139,8 @@ describe('Testing cleanupWrapper', function() {
               expect(ret).to.equal('func');
             }
           });
-
         });
-
       });
-
     });
-
   });
-
 });
