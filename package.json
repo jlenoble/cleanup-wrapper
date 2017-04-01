@@ -1,6 +1,6 @@
 {
   "name": "cleanup-wrapper",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Provide functions that leave a mess behind and break unit testing with some autocleaning capabilities",
   "main": "lib/cleanup-wrapper.js",
   "scripts": {
