@@ -18,16 +18,24 @@ export default function cleanupWrapper (func, _options) {
             let aft = options.after();
             return aft instanceof Promise ? aft.then(() => res) : res;
           }, err => {
-            options.after();
-            throw err;
+            let aft = options.after();
+            if (aft instanceof Promise) {
+              return aft.then(() => Promise.reject(err));
+            } else {
+              throw err;
+            }
           });
         } else {
           let aft = options.after();
           return aft instanceof Promise ? aft.then(() => ret) : ret;
         }
-      } catch (e) {
-        options.after();
-        throw e;
+      } catch (err) {
+        let aft = options.after();
+        if (aft instanceof Promise) {
+          return aft.then(() => Promise.reject(err));
+        } else {
+          throw err;
+        }
       }
     };
 
