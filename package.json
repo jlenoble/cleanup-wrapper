@@ -2,7 +2,7 @@
   "name": "cleanup-wrapper",
   "version": "0.2.1",
   "description": "Provide functions that leave a mess behind and break unit testing with some autocleaning capabilities",
-  "main": "index.js",
+  "main": "lib/cleanup-wrapper.js",
   "scripts": {
     "test": "gulp test"
   },
@@ -29,9 +29,11 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
+    "eslint-config-google": "^0.7.1",
     "gulp": "git://github.com/gulpjs/gulp.git#4.0",
     "gulp-babel": "^6.1.2",
     "gulp-cached": "^1.1.0",
+    "gulp-eslint": "^3.0.1",
     "gulp-jscs": "^4.0.0",
     "gulp-mocha": "^2.2.0",
     "gulp-plumber": "^1.1.0",
