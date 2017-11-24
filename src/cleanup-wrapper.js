@@ -69,6 +69,21 @@ export function tmpDir (dir, func) {
   });
 };
 
+export function chDir (cwd, func) {
+  const oldcwd = process.cwd();
+
+  return cleanupWrapper(func, {
+    cwd,
+    oldcwd,
+    before () {
+      process.chdir(this.cwd);
+    },
+    after () {
+      process.chdir(this.oldcwd);
+    },
+  });
+};
+
 export function overrideMethod (object, methodName, newMethod, func) {
   return cleanupWrapper(func, {
     object, methodName, newMethod,

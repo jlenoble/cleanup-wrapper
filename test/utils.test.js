@@ -1,6 +1,7 @@
 import gulp from 'gulp';
+import path from 'path';
 import {expect} from 'chai';
-import {tmpDir, overrideMethod} from '../src/cleanup-wrapper';
+import {tmpDir, chDir, overrideMethod} from '../src/cleanup-wrapper';
 import {expectEventuallyDeleted} from 'stat-again';
 
 describe('Testing tmpDir wrapper', function () {
@@ -38,6 +39,34 @@ describe('Testing tmpDir wrapper', function () {
             /Error: Dir '.*' already exists/);
         });
     }));
+});
+
+describe('Testing chDir wrapper', function () {
+  before(function () {
+    this.cwd = process.cwd();
+    this.chdir = path.join(this.cwd, 'src');
+    this.tmpdir = path.join(this.cwd, 'test');
+
+    this.dirty = function (chdir) {
+      expect(process.cwd()).to.equal(this.chdir);
+      process.chdir(chdir);
+      expect(process.cwd()).to.equal(this.tmpdir);
+    };
+    this.clean = chDir(this.chdir, this.dirty);
+  });
+
+  it(`chDir wrapper restores cwd after running`, function () {
+    expect(process.cwd()).to.equal(this.cwd);
+    expect(this.clean.bind(this, this.tmpdir)).not.to.throw();
+    expect(process.cwd()).to.equal(this.cwd);
+    expect(this.dirty.bind(this, this.tmpdir)).to.throw();
+    expect(process.cwd()).to.equal(this.cwd);
+    process.chdir(this.chdir);
+    expect(this.dirty.bind(this, this.tmpdir)).not.to.throw();
+    expect(process.cwd()).to.equal(this.tmpdir);
+    expect(this.clean.bind(this, this.tmpdir)).not.to.throw();
+    expect(process.cwd()).to.equal(this.cwd);
+  });
 });
 
 describe('Testing overrideMethod wrapper', function () {
