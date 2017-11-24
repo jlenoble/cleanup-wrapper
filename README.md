@@ -3,11 +3,11 @@ Provide functions that leave a mess behind and break unit testing with some auto
 
 ## Purpose
 
-Considering ```func``` a dirty function that leaves some shared ressources/variables in an unwanted state because of an uncaught exception or some oversight in the design, ```cleanWrapper(func, options)``` returns a wrapped ```func``` that will restore the ressources/variables to their proper state after each run.
+Considering `func` a dirty function that leaves some shared ressources/variables in an unwanted state because of an uncaught exception or some oversight in the design, `cleanWrapper(func, options)` returns a wrapped `func` that will restore the ressources/variables to their proper state after each run.
 
 ## Simple usage
 
-In the following example, an identity method is poorly overridden and a side-effect snowballs on each call. Using cleanupWrapper with an ```after``` option, the side-effect is removed.
+In the following example, an identity method is poorly overridden and a side-effect snowballs on each call. Using cleanupWrapper with an `after` option, the side-effect is removed.
 
 ```js
 import cleanupWrapper from 'cleanup-wrapper';
@@ -46,12 +46,12 @@ clean('World'); // Returns 'overridden: World'
 
 ### Default options
 
-* ```before```: A function to be run prior to calling the wrapped function.
-* ```after```: A function that cleans up after calling the wrapped function, whether it threw an exception or not.
+* `before`: A function to be run prior to calling the wrapped function.
+* `after`: A function that cleans up after calling the wrapped function, whether it threw an exception or not.
 
 ### Custom options
 
-You can pass any custom option you like. They can be accessed within the optional functions ```before``` and ```after``` using the ```this``` keyword.
+You can pass any custom option you like. They can be accessed within the optional functions `before` and `after` using the `this` keyword.
 
 ```js
 import cleanupWrapper from 'cleanup-wrapper';
@@ -83,7 +83,7 @@ hello === 'Hello'; // true
 
 tmpDir ensures that a directory is actually temporary. Before executing any function, it will check for the existence of the directory and throw an error if it finds it. Upon completion of the function or upon encountering an exception while running it, it will remove the tmp dir automatically.
 
-As a convenience, ```pathname``` can actually be an array of pathnames.
+As a convenience, `pathname` can actually be an array of pathnames.
 
 ```js
 import {tmpDir} from 'cleanup-wrapper';
@@ -97,6 +97,29 @@ const dirty = function() {
 const clean = tmpDir(dirName, dirty);
 
 clean(); // Executes dirty(), creating dirName, then removing it on completion or on exception
+```
+
+### chDir(pathName, func)
+
+chDir allows to have a temporary working direction for your function and ensures that whatever happens the working directory will be changed back to its original value.
+
+```js
+import {chDir} from 'cleanup-wrapper';
+
+const cwd = process.cwd();
+const dirName = '.tmp';
+
+const dirty = function() {
+  process.chdir(process.cwd() + '/foo');
+}
+
+const clean = chDir(dirName, dirty);
+
+// process.cwd() is cwd
+dirty(); // process.cwd(): cwd -> cwd/foo
+// process.cwd() is cwd/foo
+clean(); // process.cwd(): cwd/foo -> .tmp -> ./tmp/foo -> cwd
+// process.cwd() is cwd
 ```
 
 ### overrideMethod(object, methodName, newMethod, func)
