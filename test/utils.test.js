@@ -31,13 +31,13 @@ describe('Testing tmpDir wrapper', function () {
   });
 
   it(`If dir already exists, tmpDir wrapper throws an error`,
-  tmpDir('tmp_utils', function () {
-    return this.dirty().then(this.clean)
-      .catch(err => {
-        expect(err).to.match(
-          /Error: Dir '.*' already exists/);
-      });
-  }));
+    tmpDir('tmp_utils', function () {
+      return this.dirty().then(this.clean)
+        .catch(err => {
+          expect(err).to.match(
+            /Error: Dir '.*' already exists/);
+        });
+    }));
 });
 
 describe('Testing overrideMethod wrapper', function () {
@@ -59,7 +59,7 @@ describe('Testing overrideMethod wrapper', function () {
 
   it(`overrideMethod wrapper restores object after running`, function () {
     expect(this.dirty.bind(undefined, this.object)).to.throw(Error,
-      /AssertionError: expected 'original' to equal 'overridden'/);
+      /expected 'original' to equal 'overridden'/);
     expect(this.clean.bind(undefined, this.object)).not.to.throw();
     expect(this.object.name()).to.equal('original');
   });
